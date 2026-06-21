@@ -1,17 +1,27 @@
-# lumind
+# Lumind ⚡️
 
-A new Flutter project.
+> Asistente integral de productividad y bienestar digital.
 
-## Getting Started
+##  Sobre el Proyecto
 
-This project is a starting point for a Flutter application.
+Lumind es una aplicación móvil multiplataforma desarrollada en Flutter que busca solucionar la fragmentación del flujo de trabajo y reducir la fatiga digital. Diseñada bajo el concepto de "Super-app" de nicho, unifica las herramientas esenciales para el estudio y el trabajo remoto en un único ecosistema, fomentando la concentración y cuidando la salud mental del usuario.
 
-A few resources to get you started if this is your first Flutter project:
+##  Arquitectura y Tecnologías
 
-- [Learn Flutter](https://docs.flutter.dev/get-started/learn-flutter)
-- [Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Flutter learning resources](https://docs.flutter.dev/reference/learning-resources)
+El proyecto está construido priorizando la escalabilidad, la mantenibilidad y la separación de responsabilidades:
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+- **Framework:** Flutter / Dart
+- **Arquitectura:** Clean Architecture (Presentation, Domain, Data)
+- **Gestión de Estado:** BLOC Pattern
+- **Persistencia:** SQLite (Enfoque Local-First para uso offline)
+- **UI/UX:** Material Design 3
+
+##  Funcionalidades Core (En desarrollo)
+
+- [ ] **Focus Timer:** Temporizador Pomodoro integrado con reproductor de ruido blanco (lluvia, café, silencio).
+- [ ] **Gestor de Tareas:** CRUD completo de tareas diarias y objetivos.
+- [ ] **Gamificación:** Sistema de experiencia (XP) y subida de niveles basado en el tiempo de concentración real.
+
+##  Autor
+
+**Javier Medina** - Software Developer (Backend & Multiplatform)
