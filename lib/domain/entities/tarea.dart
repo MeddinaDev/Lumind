@@ -17,12 +17,12 @@ class Tarea extends Equatable {
     required this.usuarioId,
   });
 
-  // Método puro definido en tu TFG para completar la tarea
+  // Método puro para completar la tarea (buena práctica en BLOC)
   Tarea marcarCompletada() {
     return copyWith(estaCompletada: true);
   }
 
-  // Equivalente al método editar() de tu diagrama de clases
+  // Equivalente al método editar() del diagrama de clases
   Tarea copyWith({
     String? id,
     String? titulo,

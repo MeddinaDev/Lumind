@@ -9,7 +9,7 @@ class SesionPomodoro extends Equatable {
 
   const SesionPomodoro({
     required this.id,
-    required this.duracionMinutos,
+    required this.duracionMinutos, 
     required this.fechaHora,
     this.puntosGanados = 0,
     this.tareaId,
