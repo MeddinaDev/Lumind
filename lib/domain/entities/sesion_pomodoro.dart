@@ -2,6 +2,7 @@ import 'package:equatable/equatable.dart';
 
 class SesionPomodoro extends Equatable {
   final String id;
+  final String usuarioId;
   final int duracionMinutos;
   final DateTime fechaHora;
   final int puntosGanados;
@@ -9,6 +10,7 @@ class SesionPomodoro extends Equatable {
 
   const SesionPomodoro({
     required this.id,
+    required this.usuarioId, 
     required this.duracionMinutos, 
     required this.fechaHora,
     this.puntosGanados = 0,
@@ -18,6 +20,7 @@ class SesionPomodoro extends Equatable {
   // Método equivalente a editar() para mantener la inmutabilidad
   SesionPomodoro copyWith({
     String? id,
+    String? usuarioId,
     int? duracionMinutos,
     DateTime? fechaHora,
     int? puntosGanados,
@@ -25,6 +28,7 @@ class SesionPomodoro extends Equatable {
   }) {
     return SesionPomodoro(
       id: id ?? this.id,
+      usuarioId: usuarioId ?? this.usuarioId,
       duracionMinutos: duracionMinutos ?? this.duracionMinutos,
       fechaHora: fechaHora ?? this.fechaHora,
       puntosGanados: puntosGanados ?? this.puntosGanados,
@@ -35,6 +39,7 @@ class SesionPomodoro extends Equatable {
   @override
   List<Object?> get props => [
         id,
+        usuarioId,
         duracionMinutos,
         fechaHora,
         puntosGanados,
