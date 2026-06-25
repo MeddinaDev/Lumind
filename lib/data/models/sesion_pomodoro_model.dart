@@ -12,12 +12,17 @@ class SesionPomodoroModel extends SesionPomodoro {
 
   // Traductor: De Supabase (JSON) a nuestra App
   factory SesionPomodoroModel.fromJson(Map<String, dynamic> json) {
+    // ⚡️ CHIVATO: Imprimimos en la consola de tu Mac qué nos devuelve Supabase
+
     return SesionPomodoroModel(
-      id: json['id'],
-      usuarioId: json['usuario_id'],
+      // Ponemos un salvavidas (??) a los String para que si llega null no salte la pantalla roja
+      id: json['id'] ?? 'ID_NO_GENERADO',
+      usuarioId: json['usuario_id'] ?? json['user_id'] ?? 'USUARIO_VACIO',
       duracionMinutos: json['duracion_minutos'] ?? 25,
-      // Usamos fecha_hora o created_at según lo hayas nombrado en tu base de datos
-      fechaHora: DateTime.parse(json['fecha_hora'] ?? json['created_at']), 
+      // Manejamos las fechas para que nunca fallen si vienen nulas
+      fechaHora: json['fecha_hora'] != null
+          ? DateTime.parse(json['fecha_hora'])
+          : (json['created_at'] != null ? DateTime.parse(json['created_at']) : DateTime.now()),
       puntosGanados: json['puntos_ganados'] ?? 0,
       tareaId: json['tarea_id'],
     );
@@ -31,7 +36,6 @@ class SesionPomodoroModel extends SesionPomodoro {
       'puntos_ganados': puntosGanados,
     };
     
-    // Solo enviamos el tarea_id a Supabase si realmente está vinculada a una tarea
     if (tareaId != null) {
       map['tarea_id'] = tareaId!;
     }
