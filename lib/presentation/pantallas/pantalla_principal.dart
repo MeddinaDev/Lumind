@@ -1,5 +1,7 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
+import 'temporizador/pantalla_temporizador.dart';
+import 'tareas/pantalla_tareas.dart';
 
 class PantallaPrincipal extends StatefulWidget {
   const PantallaPrincipal({super.key});
@@ -11,12 +13,9 @@ class PantallaPrincipal extends StatefulWidget {
 class _PantallaPrincipalState extends State<PantallaPrincipal> {
   int _indiceActual = 0;
 
-  // Pantallas de marcador de posición (con un color de fondo sutil para que se note el desenfoque)
   final List<Widget> _pantallas = [
-    Container(
-      color: const Color(0xFFF5F5F7), // Un gris ultra claro típico de Apple
-      child: const Center(child: Text('⏱️ Pantalla del Temporizador', style: TextStyle(fontSize: 18, color: Colors.black54))),
-    ),
+    const PantallaTemporizador(),
+    const PantallaTareas(), // Aquí está conectada correctamente
     Container(
       color: const Color(0xFFF5F5F7),
       child: const Center(child: Text('📝 Pantalla de Tareas', style: TextStyle(fontSize: 18, color: Colors.black54))),
@@ -26,7 +25,6 @@ class _PantallaPrincipalState extends State<PantallaPrincipal> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // Esto permite que el fondo pase por DEBAJO de la barra de navegación
       extendBody: true, 
       body: IndexedStack(
         index: _indiceActual,
@@ -34,19 +32,17 @@ class _PantallaPrincipalState extends State<PantallaPrincipal> {
       ),
       bottomNavigationBar: SafeArea(
         child: Container(
-          // Separamos la barra de los bordes para que flote como un Dock
           margin: const EdgeInsets.only(left: 32, right: 32, bottom: 16), 
           child: ClipRRect(
-            borderRadius: BorderRadius.circular(30), // Bordes redondeados
+            borderRadius: BorderRadius.circular(30),
             child: BackdropFilter(
-              // El desenfoque matemático del cristal
               filter: ImageFilter.blur(sigmaX: 15, sigmaY: 15), 
               child: Container(
                 decoration: BoxDecoration(
-                  color: Colors.white.withValues(alpha: 0.6), // Blanco translúcido
+                  color: Colors.white.withValues(alpha: 0.6),
                   borderRadius: BorderRadius.circular(30),
                   border: Border.all(
-                    color: Colors.white.withValues(alpha: 0.3), // Borde brillante sutil
+                    color: Colors.white.withValues(alpha: 0.3),
                     width: 1.5,
                   ),
                 ),
@@ -57,11 +53,11 @@ class _PantallaPrincipalState extends State<PantallaPrincipal> {
                       _indiceActual = index;
                     });
                   },
-                  backgroundColor: Colors.transparent, // Fondo transparente a
-                  elevation: 0, // Cero sombras rígidas
+                  backgroundColor: Colors.transparent,
+                  elevation: 0,
                   selectedItemColor: Colors.blueAccent,
                   unselectedItemColor: Colors.grey.shade500,
-                  showSelectedLabels: false, // Ocultamos textos para un look más limpio
+                  showSelectedLabels: false,
                   showUnselectedLabels: false,
                   items: const [
                     BottomNavigationBarItem(

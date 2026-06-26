@@ -5,15 +5,23 @@ import 'pomodoro_event.dart';
 import 'pomodoro_state.dart';
 
 class PomodoroBloc extends Bloc<PomodoroEvent, PomodoroState> {
+  String? tareaIdSeleccionada;
+  String? tituloTareaSeleccionada;
   final RegistrarSesionPomodoroUseCase registrarSesionUseCase;
   
   // El StreamSubscription nos permite controlar el reloj interno
   StreamSubscription<int>? _tickerSubscription;
 
   PomodoroBloc({
+    
     required this.registrarSesionUseCase,
   }) : super(PomodoroInitial()) {
-    
+    on<SeleccionarTareaPomodoro>((event, emit) {
+  tareaIdSeleccionada = event.tareaId;
+  tituloTareaSeleccionada = event.tituloTarea;
+  // Emitimos un pequeño pulso para que la pantalla se refresque y muestre el nombre
+  emit(PomodoroPaused(segundosRestantes: 1500)); 
+});
     // 1. EVENTO: INICIAR
     on<IniciarPomodoro>((event, emit) {
       _tickerSubscription?.cancel(); 

@@ -53,3 +53,9 @@ class GuardarSesionPomodoro extends PomodoroEvent {
   @override
   List<Object?> get props => [usuarioId, duracionMinutos, puntosGanados, tareaId];
 }
+class SeleccionarTareaPomodoro extends PomodoroEvent {
+  final String? tareaId;
+  final String? tituloTarea;
+
+  const SeleccionarTareaPomodoro({this.tareaId, this.tituloTarea});
+}
