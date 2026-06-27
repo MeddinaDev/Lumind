@@ -58,4 +58,9 @@ class SeleccionarTareaPomodoro extends PomodoroEvent {
   final String? tituloTarea;
 
   const SeleccionarTareaPomodoro({this.tareaId, this.tituloTarea});
+  
+}
+class TicPomodoro extends PomodoroEvent {
+  final int segundosRestantes;
+  const TicPomodoro(this.segundosRestantes);
 }

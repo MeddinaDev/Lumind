@@ -2,6 +2,7 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'temporizador/pantalla_temporizador.dart';
 import 'tareas/pantalla_tareas.dart';
+import 'estadisticas/pantalla_estadisticas.dart';
 
 class PantallaPrincipal extends StatefulWidget {
   const PantallaPrincipal({super.key});
@@ -15,7 +16,8 @@ class _PantallaPrincipalState extends State<PantallaPrincipal> {
 
   final List<Widget> _pantallas = [
     const PantallaTemporizador(),
-    const PantallaTareas(), // Aquí está conectada correctamente
+    const PantallaTareas(),
+    const PantallaEstadisticas(), 
     Container(
       color: const Color(0xFFF5F5F7),
       child: const Center(child: Text('📝 Pantalla de Tareas', style: TextStyle(fontSize: 18, color: Colors.black54))),
@@ -81,6 +83,11 @@ class _PantallaPrincipalState extends State<PantallaPrincipal> {
                         child: Icon(Icons.check_circle, size: 28),
                       ),
                       label: 'Tareas',
+                    ),
+                    BottomNavigationBarItem(
+                      icon: Padding(padding: EdgeInsets.symmetric(vertical: 10.0), child: Icon(Icons.bar_chart_outlined, size: 28)),
+                      activeIcon: Padding(padding: EdgeInsets.symmetric(vertical: 10.0), child: Icon(Icons.bar_chart_rounded, size: 28)),
+                      label: 'Progreso',
                     ),
                   ],
                 ),

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
-import 'presentation/pantallas/pantalla_login.dart';
+import 'presentation/pantallas/pantalla_carga.dart';
 
 // Importaciones de Usuario
 import 'data/datasources/usuario_remote_data_source.dart';
@@ -77,12 +77,13 @@ class LumindApp extends StatelessWidget {
       ],
       child: MaterialApp(
         title: 'Lumind',
-        debugShowCheckedModeBanner: false,
+        debugShowCheckedModeBanner: false, // ¡Adiós etiqueta roja!
         theme: ThemeData(
           colorScheme: ColorScheme.fromSeed(seedColor: Colors.blueAccent),
           useMaterial3: true,
+          fontFamily: 'San Francisco', // Preparando el terreno visual
         ),
-        home: const PantallaLogin(),
+        home: const PantallaCarga(),
       ),
     );
   }

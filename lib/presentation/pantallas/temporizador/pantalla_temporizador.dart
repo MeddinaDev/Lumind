@@ -87,16 +87,17 @@ class PantallaTemporizador extends StatelessWidget {
                     ),
                   ),
                   const SizedBox(height: 64),
+                  
+                  // Fila exclusiva para los botones redondos principales
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      if (!estaCorriendo && !estaPausado) ...[
+                      if (!estaCorriendo && !estaPausado)
                         _BotonControl(
                           icono: Icons.play_arrow_rounded,
                           color: Colors.black87,
                           onTap: () => context.read<PomodoroBloc>().add(const IniciarPomodoro(minutos: 25)),
                         ),
-                      ],
                       if (estaCorriendo)
                         _BotonControl(
                           icono: Icons.pause_rounded,
@@ -118,6 +119,14 @@ class PantallaTemporizador extends StatelessWidget {
                       ],
                     ],
                   ),
+                  
+                  // Separación y botón de texto colocado DEBAJO de la fila de botones
+                  const SizedBox(height: 32), 
+                  if (!estaCorriendo && !estaPausado)
+                    TextButton(
+                      onPressed: () => context.read<PomodoroBloc>().add(const IniciarPomodoro(minutos: 1)),
+                      child: const Text('Test rápido (1 min)', style: TextStyle(color: Colors.black26)),
+                    ),
                 ],
               ),
             );
