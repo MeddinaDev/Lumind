@@ -131,9 +131,11 @@ class _PantallaTareasState extends State<PantallaTareas> {
                               contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
                               leading: GestureDetector(
                                 onTap: () => context.read<TareaBloc>().add(CambiarEstadoTarea(id: tarea.id, estaCompletada: !tarea.estaCompletada)),
-                                child: Container(
-                                  width: 26,
-                                  height: 26,
+                                child: AnimatedContainer(
+                                  duration: const Duration(milliseconds: 400),
+                                  curve: Curves.elasticOut, // ¡Aquí está la magia del rebote!
+                                  width: 28,
+                                  height: 28,
                                   decoration: BoxDecoration(
                                     shape: BoxShape.circle,
                                     border: Border.all(
@@ -142,16 +144,21 @@ class _PantallaTareasState extends State<PantallaTareas> {
                                     ),
                                     color: tarea.estaCompletada ? ThemeLumind.acento : Colors.transparent,
                                   ),
-                                  child: tarea.estaCompletada ? const Icon(Icons.check, size: 16, color: Colors.white) : null,
+                                  child: tarea.estaCompletada 
+                                      ? const Icon(Icons.check, size: 18, color: Colors.white) 
+                                      : const SizedBox(),
                                 ),
                               ),
-                              title: Text(
-                                tarea.titulo,
+                              title: AnimatedDefaultTextStyle(
+                                duration: const Duration(milliseconds: 300),
+                                curve: Curves.easeInOut,
                                 style: TextStyle(
                                   fontSize: 16,
+                                  fontFamily: 'San Francisco',
                                   color: tarea.estaCompletada ? Colors.grey.shade400 : ThemeLumind.textoPrincipal,
-                                  decoration: tarea.estaCompletada ? TextDecoration.lineThrough : null,
+                                  decoration: tarea.estaCompletada ? TextDecoration.lineThrough : TextDecoration.none,
                                 ),
+                                child: Text(tarea.titulo),
                               ),
                               trailing: IconButton(
                                 icon: const Icon(Icons.track_changes_rounded, color: ThemeLumind.acento),
