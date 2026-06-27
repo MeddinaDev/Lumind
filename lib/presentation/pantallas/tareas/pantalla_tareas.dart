@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:supabase_flutter/supabase_flutter.dart'; // <-- IMPORTANTE: Traemos Supabase
 import '../../bloc/tarea/tarea_bloc.dart';
 import '../../bloc/tarea/tarea_event.dart';
 import '../../bloc/tarea/tarea_state.dart';
@@ -15,12 +16,15 @@ class PantallaTareas extends StatefulWidget {
 
 class _PantallaTareasState extends State<PantallaTareas> {
   final TextEditingController _controlador = TextEditingController();
-  final String _usuarioIdTemporal = '5ad778e2-9a11-4b05-9c03-8943b54d92c4';
+  
+  // 🎯 EL CAMBIO CLAVE: Le pedimos a Supabase el ID único del usuario que acaba de loguearse
+  final String _usuarioId = Supabase.instance.client.auth.currentUser!.id;
 
   @override
   void initState() {
     super.initState();
-    context.read<TareaBloc>().add(CargarTareas(_usuarioIdTemporal));
+    // Cargamos las tareas específicas de este usuario real
+    context.read<TareaBloc>().add(CargarTareas(_usuarioId));
   }
 
   @override
@@ -74,7 +78,7 @@ class _PantallaTareasState extends State<PantallaTareas> {
                       onPressed: () {
                         if (_controlador.text.trim().isNotEmpty) {
                           context.read<TareaBloc>().add(
-                            AgregarTarea(titulo: _controlador.text, usuarioId: _usuarioIdTemporal),
+                            AgregarTarea(titulo: _controlador.text, usuarioId: _usuarioId),
                           );
                           _controlador.clear();
                         }
@@ -84,7 +88,7 @@ class _PantallaTareasState extends State<PantallaTareas> {
                   onSubmitted: (valor) {
                     if (valor.trim().isNotEmpty) {
                       context.read<TareaBloc>().add(
-                        AgregarTarea(titulo: valor, usuarioId: _usuarioIdTemporal),
+                        AgregarTarea(titulo: valor, usuarioId: _usuarioId),
                       );
                       _controlador.clear();
                     }
@@ -101,7 +105,7 @@ class _PantallaTareasState extends State<PantallaTareas> {
                       if (state.tareas.isEmpty) {
                         return Center(
                           child: Text(
-                            'Todo al día. ¡A disfrutar!',
+                            'Todo al día. ¡A disfrutar del descanso!',
                             style: TextStyle(color: Colors.grey.shade500, fontSize: 16),
                           ),
                         );
@@ -149,7 +153,6 @@ class _PantallaTareasState extends State<PantallaTareas> {
                                   decoration: tarea.estaCompletada ? TextDecoration.lineThrough : null,
                                 ),
                               ),
-                              // EL PUENTE: Este botón envía la tarea al temporizador
                               trailing: IconButton(
                                 icon: const Icon(Icons.track_changes_rounded, color: Colors.blueAccent),
                                 tooltip: 'Enfocar en esta tarea',

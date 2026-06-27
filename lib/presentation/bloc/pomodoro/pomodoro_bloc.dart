@@ -1,86 +1,39 @@
-import 'dart:async';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:supabase_flutter/supabase_flutter.dart'; // <-- IMPORTANTE: Añade esta importación
 import '../../../domain/usecases/registrar_sesion_pomodoro_usecase.dart';
 import 'pomodoro_event.dart';
 import 'pomodoro_state.dart';
 
 class PomodoroBloc extends Bloc<PomodoroEvent, PomodoroState> {
+  final RegistrarSesionPomodoroUseCase registrarSesionUseCase;
+
   String? tareaIdSeleccionada;
   String? tituloTareaSeleccionada;
-  final RegistrarSesionPomodoroUseCase registrarSesionUseCase;
-  
-  // El StreamSubscription nos permite controlar el reloj interno
-  StreamSubscription<int>? _tickerSubscription;
 
-  PomodoroBloc({
+  PomodoroBloc({required this.registrarSesionUseCase}) : super(PomodoroInitial()) {
     
-    required this.registrarSesionUseCase,
-  }) : super(PomodoroInitial()) {
+    // ... Tus otros manejadores de eventos (Iniciar, Pausar, Reanudar, Resetear) ...
+
     on<SeleccionarTareaPomodoro>((event, emit) {
-  tareaIdSeleccionada = event.tareaId;
-  tituloTareaSeleccionada = event.tituloTarea;
-  // Emitimos un pequeño pulso para que la pantalla se refresque y muestre el nombre
-  emit(PomodoroPaused(segundosRestantes: 1500)); 
-});
-    // 1. EVENTO: INICIAR
-    on<IniciarPomodoro>((event, emit) {
-      _tickerSubscription?.cancel(); 
-      
-      final segundosTotales = event.minutos * 60;
-      emit(PomodoroRunning(segundosRestantes: segundosTotales));
-
-      _tickerSubscription = Stream.periodic(const Duration(seconds: 1), (x) => x)
-          .take(segundosTotales)
-          .listen((tick) {
-            final restantes = segundosTotales - tick - 1;
-            add(TickPomodoro(segundosRestantes: restantes)); 
-          });
+      tareaIdSeleccionada = event.tareaId;
+      tituloTareaSeleccionada = event.tituloTarea;
+      emit(PomodoroPaused(segundosRestantes: 1500));
     });
 
-    // 2. EVENTO INTERNO: TICK
-    on<TickPomodoro>((event, emit) {
-      if (event.segundosRestantes > 0) {
-        emit(PomodoroRunning(segundosRestantes: event.segundosRestantes));
-      } else {
-        _tickerSubscription?.cancel();
-        emit(PomodoroInitial()); 
-      }
-    });
-
-    // 3. EVENTO: PAUSAR
-    on<PausarPomodoro>((event, emit) {
-      final currentState = state;
-      if (currentState is PomodoroRunning) {
-        _tickerSubscription?.pause();
-        emit(PomodoroPaused(segundosRestantes: currentState.segundosRestantes));
-      }
-    });
-
-    // 4. EVENTO: REANUDAR
-    on<ReanudarPomodoro>((event, emit) {
-      final currentState = state;
-      if (currentState is PomodoroPaused) {
-        _tickerSubscription?.resume();
-        emit(PomodoroRunning(segundosRestantes: currentState.segundosRestantes));
-      }
-    });
-
-    // 5. EVENTO: RESETEAR
-    on<ResetearPomodoro>((event, emit) {
-      _tickerSubscription?.cancel();
-      emit(PomodoroInitial());
-    });
-
-    // 6. EVENTO: GUARDAR EN SUPABASE
+    // 🎯 EL AJUSTE CLAVE: Modificamos el evento de guardado
     on<GuardarSesionPomodoro>((event, emit) async {
       emit(PomodoroGuardando());
       try {
-        await registrarSesionUseCase(
-          usuarioId: event.usuarioId,
+        // Extraemos el ID del usuario autenticado en tiempo real
+        final usuarioRealId = Supabase.instance.client.auth.currentUser!.id;
+
+        await registrarSesionUseCase.call(
+          usuarioId: usuarioRealId, // <-- Usamos el ID dinámico aquí
           duracionMinutos: event.duracionMinutos,
           puntosGanados: event.puntosGanados,
-          tareaId: event.tareaId,
+          tareaId: tareaIdSeleccionada, // Vincula la tarea si había una seleccionada
         );
+
         emit(PomodoroGuardadoExito());
       } catch (e) {
         emit(PomodoroError(e.toString()));
@@ -88,9 +41,6 @@ class PomodoroBloc extends Bloc<PomodoroEvent, PomodoroState> {
     });
   }
 
-  @override
-  Future<void> close() {
-    _tickerSubscription?.cancel();
-    return super.close();
-  }
+  // ... Recuerda comprobar también si tienes la lógica de guardado automático 
+  // cuando el Ticker del Timer llega a 0, para que dispare el evento pasando el ID real o llamando a esta misma lógica.
 }

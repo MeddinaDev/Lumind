@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
+import 'presentation/pantallas/pantalla_login.dart';
 
 // Importaciones de Usuario
 import 'data/datasources/usuario_remote_data_source.dart';
 import 'data/repositories/usuario_repository_impl.dart';
 import 'domain/usecases/crear_usuario_usecase.dart';
 import 'presentation/bloc/usuario/usuario_bloc.dart';
-import 'presentation/pantallas/pantalla_principal.dart';
 
 // Importaciones de Tarea
 import 'data/datasources/tarea_remote_data_source.dart';
@@ -82,7 +82,7 @@ class LumindApp extends StatelessWidget {
           colorScheme: ColorScheme.fromSeed(seedColor: Colors.blueAccent),
           useMaterial3: true,
         ),
-        home: const PantallaPrincipal(),
+        home: const PantallaLogin(),
       ),
     );
   }
