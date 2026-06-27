@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../bloc/pomodoro/pomodoro_bloc.dart';
 import '../../bloc/pomodoro/pomodoro_event.dart';
 import '../../bloc/pomodoro/pomodoro_state.dart';
+import '../../theme_lumind.dart';
 
 class PantallaTemporizador extends StatelessWidget {
   const PantallaTemporizador({super.key});
@@ -67,12 +68,12 @@ class PantallaTemporizador extends StatelessWidget {
                     Container(
                       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                       decoration: BoxDecoration(
-                        color: Colors.blueAccent.withValues(alpha: 0.1),
+                        color: ThemeLumind.acento.withValues(alpha: 0.1),
                         borderRadius: BorderRadius.circular(20),
                       ),
                       child: Text(
                         '🎯 $tituloTareaActiva',
-                        style: const TextStyle(color: Colors.blueAccent, fontWeight: FontWeight.w500, fontSize: 16),
+                        style: const TextStyle(color: ThemeLumind.acento, fontWeight: FontWeight.w500, fontSize: 16),
                       ),
                     ),
                   
@@ -95,7 +96,7 @@ class PantallaTemporizador extends StatelessWidget {
                       if (!estaCorriendo && !estaPausado)
                         _BotonControl(
                           icono: Icons.play_arrow_rounded,
-                          color: Colors.black87,
+                          color: ThemeLumind.acento,
                           onTap: () => context.read<PomodoroBloc>().add(const IniciarPomodoro(minutos: 25)),
                         ),
                       if (estaCorriendo)

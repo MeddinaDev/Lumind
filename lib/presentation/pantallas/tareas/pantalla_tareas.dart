@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:supabase_flutter/supabase_flutter.dart'; // <-- IMPORTANTE: Traemos Supabase
+import 'package:supabase_flutter/supabase_flutter.dart';
+import '../../theme_lumind.dart';
 import '../../bloc/tarea/tarea_bloc.dart';
 import '../../bloc/tarea/tarea_event.dart';
 import '../../bloc/tarea/tarea_state.dart';
@@ -17,13 +18,11 @@ class PantallaTareas extends StatefulWidget {
 class _PantallaTareasState extends State<PantallaTareas> {
   final TextEditingController _controlador = TextEditingController();
   
-  // 🎯 EL CAMBIO CLAVE: Le pedimos a Supabase el ID único del usuario que acaba de loguearse
   final String _usuarioId = Supabase.instance.client.auth.currentUser!.id;
 
   @override
   void initState() {
     super.initState();
-    // Cargamos las tareas específicas de este usuario real
     context.read<TareaBloc>().add(CargarTareas(_usuarioId));
   }
 
@@ -36,7 +35,7 @@ class _PantallaTareasState extends State<PantallaTareas> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFF5F5F7),
+      backgroundColor: ThemeLumind.fondo, // Aplicamos el fondo del sistema
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 24.0),
@@ -56,7 +55,7 @@ class _PantallaTareasState extends State<PantallaTareas> {
               const SizedBox(height: 16),
               Container(
                 decoration: BoxDecoration(
-                  color: Colors.white,
+                  color: ThemeLumind.superficie,
                   borderRadius: BorderRadius.circular(16),
                   boxShadow: [
                     BoxShadow(
@@ -68,13 +67,14 @@ class _PantallaTareasState extends State<PantallaTareas> {
                 ),
                 child: TextField(
                   controller: _controlador,
+                  style: const TextStyle(color: ThemeLumind.textoPrincipal),
                   decoration: InputDecoration(
                     hintText: '¿Qué necesitas hacer hoy?',
                     hintStyle: TextStyle(color: Colors.grey.shade400, fontWeight: FontWeight.w400),
                     border: InputBorder.none,
                     contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 18),
                     suffixIcon: IconButton(
-                      icon: const Icon(Icons.add_circle_rounded, color: Colors.blueAccent, size: 30),
+                      icon: const Icon(Icons.add_circle_rounded, color: ThemeLumind.acento, size: 30),
                       onPressed: () {
                         if (_controlador.text.trim().isNotEmpty) {
                           context.read<TareaBloc>().add(
@@ -100,7 +100,7 @@ class _PantallaTareasState extends State<PantallaTareas> {
                 child: BlocBuilder<TareaBloc, TareaState>(
                   builder: (context, state) {
                     if (state is TareaLoading) {
-                      return const Center(child: CircularProgressIndicator(color: Colors.black87));
+                      return const Center(child: CircularProgressIndicator(color: ThemeLumind.textoPrincipal));
                     } else if (state is TareaLoaded) {
                       if (state.tareas.isEmpty) {
                         return Center(
@@ -117,7 +117,7 @@ class _PantallaTareasState extends State<PantallaTareas> {
                           final tarea = state.tareas[index];
                           return Container(
                             decoration: BoxDecoration(
-                              color: Colors.white,
+                              color: ThemeLumind.superficie,
                               borderRadius: BorderRadius.circular(16),
                               boxShadow: [
                                 BoxShadow(
@@ -137,10 +137,10 @@ class _PantallaTareasState extends State<PantallaTareas> {
                                   decoration: BoxDecoration(
                                     shape: BoxShape.circle,
                                     border: Border.all(
-                                      color: tarea.estaCompletada ? Colors.blueAccent : Colors.grey.shade300,
+                                      color: tarea.estaCompletada ? ThemeLumind.acento : Colors.grey.shade300,
                                       width: 2,
                                     ),
-                                    color: tarea.estaCompletada ? Colors.blueAccent : Colors.transparent,
+                                    color: tarea.estaCompletada ? ThemeLumind.acento : Colors.transparent,
                                   ),
                                   child: tarea.estaCompletada ? const Icon(Icons.check, size: 16, color: Colors.white) : null,
                                 ),
@@ -149,19 +149,19 @@ class _PantallaTareasState extends State<PantallaTareas> {
                                 tarea.titulo,
                                 style: TextStyle(
                                   fontSize: 16,
-                                  color: tarea.estaCompletada ? Colors.grey.shade400 : Colors.black87,
+                                  color: tarea.estaCompletada ? Colors.grey.shade400 : ThemeLumind.textoPrincipal,
                                   decoration: tarea.estaCompletada ? TextDecoration.lineThrough : null,
                                 ),
                               ),
                               trailing: IconButton(
-                                icon: const Icon(Icons.track_changes_rounded, color: Colors.blueAccent),
+                                icon: const Icon(Icons.track_changes_rounded, color: ThemeLumind.acento),
                                 tooltip: 'Enfocar en esta tarea',
                                 onPressed: () {
                                   context.read<PomodoroBloc>().add(SeleccionarTareaPomodoro(tareaId: tarea.id, tituloTarea: tarea.titulo));
                                   ScaffoldMessenger.of(context).showSnackBar(
                                     SnackBar(
                                       content: Text('🎯 Enfocando en: ${tarea.titulo}'),
-                                      backgroundColor: Colors.black87,
+                                      backgroundColor: ThemeLumind.textoPrincipal,
                                       behavior: SnackBarBehavior.floating,
                                       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
                                       duration: const Duration(seconds: 2),

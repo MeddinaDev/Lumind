@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'temporizador/pantalla_temporizador.dart';
 import 'tareas/pantalla_tareas.dart';
 import 'estadisticas/pantalla_estadisticas.dart';
+import '../theme_lumind.dart';
 
 class PantallaPrincipal extends StatefulWidget {
   const PantallaPrincipal({super.key});
@@ -14,23 +15,32 @@ class PantallaPrincipal extends StatefulWidget {
 class _PantallaPrincipalState extends State<PantallaPrincipal> {
   int _indiceActual = 0;
 
+  // Lista limpia solo con las 3 pantallas reales de tu app
   final List<Widget> _pantallas = [
     const PantallaTemporizador(),
     const PantallaTareas(),
     const PantallaEstadisticas(), 
-    Container(
-      color: const Color(0xFFF5F5F7),
-      child: const Center(child: Text('📝 Pantalla de Tareas', style: TextStyle(fontSize: 18, color: Colors.black54))),
-    ),
   ];
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       extendBody: true, 
-      body: IndexedStack(
-        index: _indiceActual,
-        children: _pantallas,
+      // Aquí está la magia de la transición fluida de iOS
+      body: AnimatedSwitcher(
+        duration: const Duration(milliseconds: 350), 
+        switchInCurve: Curves.easeOut,
+        switchOutCurve: Curves.easeIn,
+        transitionBuilder: (Widget child, Animation<double> animation) {
+          return FadeTransition(
+            opacity: animation,
+            child: child,
+          );
+        },
+        child: SizedBox(
+          key: ValueKey<int>(_indiceActual),
+          child: _pantallas[_indiceActual],
+        ),
       ),
       bottomNavigationBar: SafeArea(
         child: Container(
@@ -57,7 +67,7 @@ class _PantallaPrincipalState extends State<PantallaPrincipal> {
                   },
                   backgroundColor: Colors.transparent,
                   elevation: 0,
-                  selectedItemColor: Colors.blueAccent,
+                  selectedItemColor: ThemeLumind.acento,
                   unselectedItemColor: Colors.grey.shade500,
                   showSelectedLabels: false,
                   showUnselectedLabels: false,
