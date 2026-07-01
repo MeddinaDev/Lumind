@@ -7,6 +7,7 @@ import '../../bloc/tarea/tarea_event.dart';
 import '../../bloc/tarea/tarea_state.dart';
 import '../../bloc/pomodoro/pomodoro_bloc.dart';
 import '../../bloc/pomodoro/pomodoro_event.dart';
+import 'package:flutter/services.dart';
 
 class PantallaTareas extends StatefulWidget {
   const PantallaTareas({super.key});
@@ -130,8 +131,12 @@ class _PantallaTareasState extends State<PantallaTareas> {
                             child: ListTile(
                               contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
                               leading: GestureDetector(
-                                onTap: () => context.read<TareaBloc>().add(CambiarEstadoTarea(id: tarea.id, estaCompletada: !tarea.estaCompletada)),
-                                child: AnimatedContainer(
+                              onTap: () {
+                               HapticFeedback.lightImpact(); // ¡El tic físico!
+                               context.read<TareaBloc>().add(CambiarEstadoTarea(id: tarea.id, estaCompletada: !tarea.estaCompletada));
+
+
+                             },                                child: AnimatedContainer(
                                   duration: const Duration(milliseconds: 400),
                                   curve: Curves.elasticOut, // ¡Aquí está la magia del rebote!
                                   width: 28,

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
+import '../pantalla_carga.dart'; // Importamos la carga para reiniciar el flujo
 
 class PantallaEstadisticas extends StatefulWidget {
   const PantallaEstadisticas({super.key});
@@ -12,7 +13,6 @@ class _PantallaEstadisticasState extends State<PantallaEstadisticas> {
   final _usuarioId = Supabase.instance.client.auth.currentUser!.id;
   final _supabase = Supabase.instance.client;
 
-  // Hacemos una consulta rápida a Supabase para sumar todo el progreso
   Future<Map<String, dynamic>> _obtenerEstadisticas() async {
     final respuesta = await _supabase
         .from('sesion_pomodoro')
@@ -35,6 +35,19 @@ class _PantallaEstadisticasState extends State<PantallaEstadisticas> {
     };
   }
 
+  // EL NUEVO MOTOR DE SALIDA
+  Future<void> _cerrarSesion() async {
+    await _supabase.auth.signOut(); // Destruimos la sesión en Supabase
+    
+    if (mounted) {
+      // Borramos todo el historial de navegación y mandamos al usuario al inicio
+      Navigator.of(context).pushAndRemoveUntil(
+        MaterialPageRoute(builder: (context) => const PantallaCarga()),
+        (route) => false,
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -46,16 +59,27 @@ class _PantallaEstadisticasState extends State<PantallaEstadisticas> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               const SizedBox(height: 24),
-              const Text(
-                'MI PROGRESO',
-                style: TextStyle(
-                  fontSize: 14,
-                  letterSpacing: 4.0,
-                  fontWeight: FontWeight.w600,
-                  color: Colors.black38,
-                ),
+              // Envolvemos el título en un Row para añadir el botón a la derecha
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  const Text(
+                    'MI PROGRESO',
+                    style: TextStyle(
+                      fontSize: 14,
+                      letterSpacing: 4.0,
+                      fontWeight: FontWeight.w600,
+                      color: Colors.black38,
+                    ),
+                  ),
+                  IconButton(
+                    onPressed: _cerrarSesion,
+                    icon: const Icon(Icons.logout_rounded, color: Colors.black38),
+                    tooltip: 'Cerrar Sesión',
+                  ),
+                ],
               ),
-              const SizedBox(height: 32),
+              const SizedBox(height: 24),
               Expanded(
                 child: FutureBuilder<Map<String, dynamic>>(
                   future: _obtenerEstadisticas(),
@@ -65,12 +89,13 @@ class _PantallaEstadisticasState extends State<PantallaEstadisticas> {
                     }
                     
                     if (snapshot.hasError) {
-                      return Center(child: Text('Error al cargar datos: ${snapshot.error}', style: const TextStyle(color: Colors.red)));
+                      return Center(child: Text('Error al cargar datos', style: const TextStyle(color: Colors.red)));
                     }
 
                     final stats = snapshot.data ?? {'minutos': 0, 'puntos': 0, 'sesiones': 0};
 
                     return ListView(
+                      physics: const BouncingScrollPhysics(), // Un toque de suavidad extra aquí también
                       children: [
                         _TarjetaEstadistica(
                           titulo: 'MINUTOS DE ENFOQUE',
