@@ -5,6 +5,7 @@ import '../../bloc/pomodoro/pomodoro_bloc.dart';
 import '../../bloc/pomodoro/pomodoro_event.dart';
 import '../../bloc/pomodoro/pomodoro_state.dart';
 import '../../theme_lumind.dart';
+import 'package:audioplayers/audioplayers.dart';
 
 class PantallaTemporizador extends StatelessWidget {
   const PantallaTemporizador({super.key});
@@ -24,6 +25,10 @@ class PantallaTemporizador extends StatelessWidget {
           listener: (context, state) {
             if (state is PomodoroGuardadoExito) {
               HapticFeedback.heavyImpact(); // Vibración contundente de éxito
+
+              // REPRODUCIR EL DING DE ÉXITO
+           AudioPlayer().play(AssetSource('audio/exito.mp3')); 
+
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(
                   content: const Text('¡Sesión completada y guardada! 🚀', style: TextStyle(color: Colors.white)),
